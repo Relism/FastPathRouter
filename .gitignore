@@ -1,0 +1,18 @@
+# Maven
+/target/
+**/target/
+*.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Bench results
+fpr-bench/results/
