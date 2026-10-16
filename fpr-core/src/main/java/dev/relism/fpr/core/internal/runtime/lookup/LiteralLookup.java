@@ -73,6 +73,10 @@ public final class LiteralLookup {
             } else if (cmp > 0) {
                 lo = mid + 1;
             } else {
+                if (segLen <= 8) {
+                    // The key holds every byte of a literal this short, so equal keys are equal literals.
+                    return mid;
+                }
                 int left = mid;
                 while (left > start && compare(segLen, key, router.edgeLabelLen[left - 1], router.edgeLiteralPrefix[left - 1]) == 0) {
                     left--;
@@ -119,7 +123,8 @@ public final class LiteralLookup {
             if (stored == key) {
                 int edgeIndex = router.literalHashEdge[off + slot];
                 if (edgeIndex >= start && edgeIndex < start + count && router.edgeLabelLen[edgeIndex] == segLen
-                        && ByteCompare.equals(input, segStart, router.blob, router.edgeLabelOff[edgeIndex], segLen, supportsLong)) {
+                        && (segLen <= 8
+                        || ByteCompare.equals(input, segStart, router.blob, router.edgeLabelOff[edgeIndex], segLen, supportsLong))) {
                     return edgeIndex;
                 }
             }

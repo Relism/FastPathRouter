@@ -64,12 +64,12 @@ public final class FrozenRouter<H> implements FastPathRouter<ByteView, H> {
      */
     @Override
     public int match(ByteView input, MatchResult<H> out) {
-        RouteSearch search = new RouteSearch();
-        SegmentCursor cursor = new SegmentCursor();
+        RouteSearch search = RouteSearch.of(out);
+        SegmentCursor cursor = search.cursor();
         out.reset();
         boolean supportsLong = input.supportsLong();
         cursor.reset(input);
-        search.reset(out);
+        search.reset();
         RouteSearch.Frame frame = search.frame();
 
         int len = cursor.length();

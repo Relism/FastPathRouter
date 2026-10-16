@@ -16,18 +16,22 @@ public final class ByteCompare {
         if (len == 0) {
             return true;
         }
-        int i = 0;
         if (supportsLong && len >= 8) {
-            int end = len - 8;
-            for (; i <= end; i += 8) {
-                long a = view.longAt(start + i);
-                long b = (long) LONG_VIEW.get(blob, off + i);
-                if (a != b) {
+            int last = len - 8;
+            for (int i = 0; i < last; i += 8) {
+                if (view.longAt(start + i) != (long) LONG_VIEW.get(blob, off + i)) {
                     return false;
                 }
             }
+            // The tail is the last 8 bytes, overlapping the chunk before it, so no byte loop is left.
+            return view.longAt(start + last) == (long) LONG_VIEW.get(blob, off + last);
         }
-        for (; i < len; i++) {
+        if (supportsLong && start + 8 <= view.length() && off + 8 <= blob.length) {
+            // Shorter than a long: compare the first len bytes of one little-endian read each.
+            long mask = -1L >>> ((8 - len) << 3);
+            return ((view.longAt(start) ^ (long) LONG_VIEW.get(blob, off)) & mask) == 0;
+        }
+        for (int i = 0; i < len; i++) {
             if (view.byteAt(start + i) != blob[off + i]) {
                 return false;
             }

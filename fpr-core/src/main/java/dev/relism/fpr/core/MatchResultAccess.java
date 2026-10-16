@@ -74,4 +74,12 @@ public final class MatchResultAccess {
     public static void paramCount(MatchResult<?> result, int count) {
         result.paramCount(count);
     }
+
+    public static Object searchState(MatchResult<?> result) {
+        return result.searchState();
+    }
+
+    public static void searchState(MatchResult<?> result, Object state) {
+        result.searchState(state);
+    }
 }
