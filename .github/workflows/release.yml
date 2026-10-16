@@ -32,6 +32,8 @@ jobs:
           TAG: ${{ needs.release-please.outputs.tag_name }}
         run: |
           base="https://jitpack.io/dev/relism/FastPathRouter"
+          # Asked within seconds of the tag, JitPack answers "tag not found" and only rechecks later.
+          sleep 120
           for _ in $(seq 40); do
             curl -sf -o /dev/null --max-time 60 "$base/fpr-core/$TAG/fpr-core-$TAG.pom" && exit 0
             sleep 30
