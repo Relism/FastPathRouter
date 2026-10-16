@@ -9,7 +9,7 @@ Modules:
 - fpr-netty: Netty adapters (ByteBuf view + path extraction)
 - fpr-bench: JMH benchmarks
 
-Install from [JitPack](https://jitpack.io/#Relism/FastPathRouter), with the latest tag as the version:
+Install from [JitPack](https://jitpack.io/#Relism/FastPathRouter), with the latest tag (the badge above) as the version:
 ```xml
 <repositories>
     <repository>
@@ -21,7 +21,7 @@ Install from [JitPack](https://jitpack.io/#Relism/FastPathRouter), with the late
 <dependency>
     <groupId>dev.relism.FastPathRouter</groupId>
     <artifactId>fpr-core</artifactId>
-    <version>v1.1.0</version>
+    <version>vX.Y.Z</version>
 </dependency>
 ```
 
