@@ -22,6 +22,7 @@ public final class MatchResult<H> {
     private final int[] scratchEdges;
     private int stackSize;
     private int paramCount;
+    private Object searchState;
     @Setter
     private H handler;
     private int labelId;
@@ -207,5 +208,13 @@ public final class MatchResult<H> {
 
     void paramCount(int count) {
         this.paramCount = count;
+    }
+
+    Object searchState() {
+        return searchState;
+    }
+
+    void searchState(Object state) {
+        this.searchState = state;
     }
 }

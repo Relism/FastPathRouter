@@ -224,6 +224,31 @@ class RouterMatchTest {
         assertThat(out.handler()).isEqualTo("ANY_ASSETS");
     }
 
+    @Test
+    void matchingWithAReusedResultDoesNotAllocate() {
+        RouterBuilder<String> builder = new RouterBuilder<>();
+        builder.add(StringRouteParser.parse("/users/{id}"), "USER");
+        builder.add(StringRouteParser.parse("/users/{id}/orders/{orderId}"), "ORDER");
+        builder.add(StringRouteParser.parse("/files/**"), "FILES");
+        FastPathRouter<ByteView, String> router = builder.compile();
+        MatchResult<String> out = new MatchResult<>(builder.maxParamCount());
+        ByteView[] paths = {view("/users/42"), view("/users/42/orders/7"), view("/files/a/b/c")};
+        com.sun.management.ThreadMXBean threads =
+                (com.sun.management.ThreadMXBean) java.lang.management.ManagementFactory.getThreadMXBean();
+
+        for (int i = 0; i < 20_000; i++) {
+            router.match(paths[i % paths.length], out);
+        }
+        long before = threads.getThreadAllocatedBytes(Thread.currentThread().getId());
+        for (int i = 0; i < 20_000; i++) {
+            router.match(paths[i % paths.length], out);
+        }
+        long allocated = threads.getThreadAllocatedBytes(Thread.currentThread().getId()) - before;
+
+        // A few hundred bytes of slack for the measurement itself, far below one object per match.
+        assertThat(allocated).isLessThan(1_000);
+    }
+
     private static ByteView view(String path) {
         return new ByteArrayView(path.getBytes(StandardCharsets.US_ASCII));
     }

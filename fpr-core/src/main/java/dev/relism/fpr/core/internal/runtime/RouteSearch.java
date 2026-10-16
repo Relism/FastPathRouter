@@ -9,22 +9,23 @@ import dev.relism.fpr.core.internal.runtime.lookup.MixedLookup;
 final class RouteSearch {
     static final long NO_CANDIDATE = -1L;
 
-    private int[] stackState;
-    private int[] stackSegStart;
-    private int[] stackSegLen;
-    private int[] stackNextIdx;
-    private int[] stackParamMark;
-    private int[] stackEdgeIndex;
-    private byte[] stackKind;
-    private int[] keyIds;
-    private int[] starts;
-    private int[] lens;
-    private int[] scratchKeyIds;
-    private int[] scratchStarts;
-    private int[] scratchLens;
-    private int[] scratchEdges;
+    private final int[] stackState;
+    private final int[] stackSegStart;
+    private final int[] stackSegLen;
+    private final int[] stackNextIdx;
+    private final int[] stackParamMark;
+    private final int[] stackEdgeIndex;
+    private final byte[] stackKind;
+    private final int[] keyIds;
+    private final int[] starts;
+    private final int[] lens;
+    private final int[] scratchKeyIds;
+    private final int[] scratchStarts;
+    private final int[] scratchLens;
+    private final int[] scratchEdges;
     private int stackSize;
     private final Frame frame = new Frame();
+    private final SegmentCursor cursor = new SegmentCursor();
 
     private final byte kindLiteral = (byte) EdgeKind.LITERAL.ordinal();
     private final byte kindMixed = (byte) EdgeKind.MIXED.ordinal();
@@ -32,7 +33,24 @@ final class RouteSearch {
     private final byte kindWild = (byte) EdgeKind.WILD.ordinal();
     private final byte kindCatch = (byte) EdgeKind.CATCH.ordinal();
 
-    void reset(MatchResult<?> out) {
+    /**
+     * The search state kept in {@code out}, created on its first match. A MatchResult is used by
+     * one thread at a time, so reusing its state keeps match() allocation-free and thread-safe.
+     */
+    static RouteSearch of(MatchResult<?> out) {
+        RouteSearch search = (RouteSearch) MatchResultAccess.searchState(out);
+        if (search == null) {
+            search = new RouteSearch(out);
+            MatchResultAccess.searchState(out, search);
+        }
+        return search;
+    }
+
+    SegmentCursor cursor() {
+        return cursor;
+    }
+
+    private RouteSearch(MatchResult<?> out) {
         this.stackState = MatchResultAccess.stackState(out);
         this.stackSegStart = MatchResultAccess.stackSegStart(out);
         this.stackSegLen = MatchResultAccess.stackSegLen(out);
@@ -47,6 +65,9 @@ final class RouteSearch {
         this.scratchStarts = MatchResultAccess.scratchStarts(out);
         this.scratchLens = MatchResultAccess.scratchLens(out);
         this.scratchEdges = MatchResultAccess.scratchEdges(out);
+    }
+
+    void reset() {
         this.stackSize = 0;
     }
 

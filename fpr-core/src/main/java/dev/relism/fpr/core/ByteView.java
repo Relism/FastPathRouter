@@ -9,6 +9,10 @@ public interface ByteView {
         return false;
     }
 
+    /**
+     * The 8 bytes starting at {@code index}, read little-endian. Called only when
+     * {@link #supportsLong()} is true and {@code index + 8 <= length()}.
+     */
     default long longAt(int index) {
         throw new UnsupportedOperationException("longAt not supported");
     }
