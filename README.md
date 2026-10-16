@@ -52,16 +52,16 @@ out.forEachParam(view, paramNames, (name, bytes, start, len) -> {
 
 Build and test:
 ```
-mvn -q -DskipTests=false test
+./mvnw -q test
 ```
 
 Run benchmarks:
 ```
-mvn -pl fpr-bench -DskipTests package
+./mvnw -pl fpr-bench -DskipTests package
 java -jar fpr-bench/target/fpr-bench-*.jar -wi 5 -i 5
 ```
 
 Or use the Maven exec profile:
 ```
-mvn -pl fpr-bench -am -Pbench verify
+./mvnw -pl fpr-bench -am -Pbench verify
 ```
