@@ -9,6 +9,30 @@
     <version>1.1.0</version>
     <packaging>pom</packaging>
 
+    <name>FastPathRouter</name>
+    <description>A GC-friendly HTTP path router that compiles routes into immutable match tables.</description>
+    <url>https://github.com/Relism/FastPathRouter</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>Relism</id>
+            <url>https://github.com/Relism</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/Relism/FastPathRouter</url>
+        <connection>scm:git:https://github.com/Relism/FastPathRouter.git</connection>
+        <developerConnection>scm:git:https://github.com/Relism/FastPathRouter.git</developerConnection>
+    </scm>
+
     <modules>
         <module>fpr-core</module>
         <module>fpr-netty</module>
@@ -26,13 +50,6 @@
         <assertj.version>3.27.6</assertj.version>
         <jmh.version>1.37</jmh.version>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>Personal</id>
-            <url>https://maven.relism.dev/releases</url>
-        </repository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>

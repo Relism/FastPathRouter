@@ -1,11 +1,29 @@
 # FastPathRouter (FPR)
 
+[![JitPack](https://jitpack.io/v/Relism/FastPathRouter.svg)](https://jitpack.io/#Relism/FastPathRouter)
+
 FastPathRouter is a tiny, GC-friendly routing core designed to compile startup-time route definitions into immutable, array-based match tables. The hot path avoids String and Map allocations and works directly on byte views.
 
 Modules:
 - fpr-core: routing core and compiler
 - fpr-netty: Netty adapters (ByteBuf view + path extraction)
 - fpr-bench: JMH benchmarks
+
+Install from [JitPack](https://jitpack.io/#Relism/FastPathRouter), with the latest tag as the version:
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>dev.relism.FastPathRouter</groupId>
+    <artifactId>fpr-core</artifactId>
+    <version>v1.1.0</version>
+</dependency>
+```
 
 Philosophy:
 - build routes at startup, compile into frozen tables
@@ -40,7 +58,7 @@ mvn -q -DskipTests=false test
 Run benchmarks:
 ```
 mvn -pl fpr-bench -DskipTests package
-java -jar fpr-bench/target/fpr-bench-1.0-SNAPSHOT-shaded.jar -wi 5 -i 5
+java -jar fpr-bench/target/fpr-bench-*.jar -wi 5 -i 5
 ```
 
 Or use the Maven exec profile:
