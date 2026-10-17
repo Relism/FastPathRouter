@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - master
+    # release-please PRs only bump versions and the changelog
+    ignore_usernames:
+      - "github-actions[bot]"
+  path_filters:
+    - "!CHANGELOG.md"
+    - "!mvnw"
+    - "!mvnw.cmd"
+    - "!.mvn/wrapper/**"
+  path_instructions:
+    - path: "**/pom.xml"
+      instructions: |
+        When a dependency or plugin version changes, as in every Dependabot PR, read the release notes
+        between the old and the new version and list the changes that touch an API this repository uses.
+        fpr-core compiles for Java 11: flag dependencies whose main artifacts need a newer runtime.
+    - path: "fpr-core/src/main/java/**/*.java"
+      instructions: |
+        match() is allocation-free and thread-safe per MatchResult, enforced by
+        matchingWithAReusedResultDoesNotAllocate. Flag any allocation, boxing, capturing lambda or
+        String creation on the match path, and any state shared between MatchResults.
+        Performance claims need fpr-bench numbers before and after.
+    - path: "fpr-netty/src/main/java/**/*.java"
+      instructions: |
+        Adapters must not copy the ByteBuf: views read from it in place.
+
+knowledge_base:
+  linked_repositories:
+    - repository: "Relism/Flash"
+      instructions: "The HTTP framework that depends on fpr-core."
